@@ -1,62 +1,61 @@
 ---
 - hosts: all
   roles: docker
-    - name: Ensure required containers exist
-      docker:
-        name: "{{ item }}"
-      with_items:
-         - nova_compute
-         - ironic_inspector_dnsmasq
-         - ironic_inspector
-         - ironic_pxe_http
-         - ironic_pxe_tftp
-         - ironic_conductor
-         - ironic_neutron_agent
-         - mistral_api
-         - neutron_ovs_agent
-         - neutron_l3_agent
-         - neutron_dhcp
-         - ironic_api
-         - nova_metadata
-         - nova_api
-         - glance_api
-         - swift_proxy
-         - logrotate_crond
-         - tripleo_ui
-         - swift_account_server
-         - neutron_api
-         - zaqar
-         - swift_container_server
-         - swift_container_auditor
-         - swift_object_updater
-         - swift_container_replicator
-         - swift_account_auditor
-         - heat_api_cfn
-         - nova_conductor
-         - swift_object_replicator
-         - heat_api_cron
-         - mistral_engine
-         - heat_engine
-         - swift_rsync
-         - swift_object_expirer
-         - swift_account_reaper
-         - mistral_event_engine
-         - nova_api_cron
-         - zaqar_websocket
-         - swift_account_replicator
-         - swift_object_auditor
-         - heat_api
-         - swift_object_server
-         - nova_scheduler
-         - mistral_executor
-         - swift_container_updater
-         - keystone_cron
-         - keystone
-         - iscsid
-         - nova_placement
-         - mysql
-         - rabbitmq
-         - memcached
-         - haproxy
-         - keepalived
-
+- name: ensure required containers exist
+  docker:
+    name: "{{ item }}"
+  with_items:
+     - nova_compute
+     - ironic_inspector_dnsmasq
+     - ironic_inspector
+     - ironic_pxe_http
+     - ironic_pxe_tftp
+     - ironic_conductor
+     - ironic_neutron_agent
+     - mistral_api
+     - neutron_ovs_agent
+     - neutron_l3_agent
+     - neutron_dhcp
+     - ironic_api
+     - nova_metadata
+     - nova_api
+     - glance_api
+     - swift_proxy
+     - logrotate_crond
+     - tripleo_ui
+     - swift_account_server
+     - neutron_api
+     - zaqar
+     - swift_container_server
+     - swift_container_auditor
+     - swift_object_updater
+     - swift_container_replicator
+     - swift_account_auditor
+     - heat_api_cfn
+     - nova_conductor
+     - swift_object_replicator
+     - heat_api_cron
+     - mistral_engine
+     - heat_engine
+     - swift_rsync
+     - swift_object_expirer
+     - swift_account_reaper
+     - mistral_event_engine
+     - nova_api_cron
+     - zaqar_websocket
+     - swift_account_replicator
+     - swift_object_auditor
+     - heat_api
+     - swift_object_server
+     - nova_scheduler
+     - mistral_executor
+     - swift_container_updater
+     - keystone_cron
+     - keystone
+     - iscsid
+     - nova_placement
+     - mysql
+     - rabbitmq
+     - memcached
+     - haproxy
+     - keepalived
