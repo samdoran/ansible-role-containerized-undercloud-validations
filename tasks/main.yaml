@@ -1,6 +1,7 @@
 ---
-- hosts: all
-  roles: docker
+- roles:
+     - docker
+
 - name: ensure required containers exist
   docker:
     name: "{{ item }}"
