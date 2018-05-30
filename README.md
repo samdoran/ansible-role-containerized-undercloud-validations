@@ -68,6 +68,7 @@ Nmap done: 1 IP address (1 host up) scanned in 5.38 seconds
 ## Questions
 
 * What version was undercloud pre-containerized?
+* Are keepalived and haproxy supports to be running?
 
 ## Useful Links
 
