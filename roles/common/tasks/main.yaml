@@ -1,4 +1,3 @@
-tasks:
 - command: "docker ps --format '{{curlies}}{ json .Names }}'"
   register: contained
 - set_fact:
