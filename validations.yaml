@@ -1,4 +1,9 @@
 ---
 - hosts: all
+  become: no
+  connection: local
+  gather_facts: no
+  vars:
+    curlies: '{'
   roles:
      - common
