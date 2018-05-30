@@ -3,7 +3,5 @@
   become: yes
   connection: local
   gather_facts: no
-  vars:
-    curlies: '{'
   roles:
      - common

@@ -1,4 +1,5 @@
-- command: "docker ps --format '{{curlies}}{ json .Names }}'"
+- command: |
+    {% raw %}docker ps --format '{{ json .Names }}'{% endraw %}
   register: contained
 - set_fact:
     container_names: >
