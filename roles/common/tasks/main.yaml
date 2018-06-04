@@ -64,13 +64,13 @@
   - haproxy
   - keepalived
 - name: check appropriate ports are listening
-  wait_for:
-    host: localhost
-    port: "{{ item }}"
-    state: started         # Port should be open
-    delay: 0               # No wait before first check (sec)
-    timeout: 3             # Stop checking after timeout (sec)
-  ignore_errors: yes
-  with_items:
-    - 3306
-    - 5000
+    wait_for:
+      host: 0.0.0.0
+      port: "{{ item }}"
+      state: started         # Port should be open
+      delay: 0               # No wait before first check (sec)
+      timeout: 3             # Stop checking after timeout (sec)
+    ignore_errors: yes
+    with_items:
+      - 3306
+      - 5000
