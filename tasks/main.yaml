@@ -1,0 +1,17 @@
+- docker_facts:
+
+- name: Assert that appropriate containers are running
+  assert:
+    that: "{{ diff_length | length == 0 }}"
+  vars:
+    diff_length: "{{ undercloud_validation_running_containers | difference(docker.containers | map(attribute='name')) }}"
+
+- name: check appropriate ports are listening
+  wait_for:
+    host: 0.0.0.0
+    port: "{{ item }}"
+    state: started         # Port should be open
+    delay: 0               # No wait before first check (sec)
+    timeout: 3             # Stop checking after timeout (sec)
+  ignore_errors: yes
+  loop: "{{ undercloud_validation_open_ports }}"

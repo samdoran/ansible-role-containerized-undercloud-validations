@@ -1,14 +1,8 @@
-- name: check docker containers are up and running
-  command: |
-    {% raw %}docker ps --format '{{ json .Names }}'{% endraw %}
-  register: contained
-- set_fact:
-    container_names: >
-      {{ (contained.stdout | regex_replace('"', '')).splitlines() }}
-#- debug: var=container_names
-- assert:
-    that: 'item in container_names'
-  with_items:
+undercloud_validation_open_ports:
+  - 3306
+  - 5000
+
+undercloud_validation_running_containers:
   - nova_compute
   - ironic_inspector_dnsmasq
   - ironic_inspector
@@ -63,14 +57,3 @@
   - memcached
   - haproxy
   - keepalived
-- name: check appropriate ports are listening
-  wait_for:
-    host: 0.0.0.0
-    port: "{{ item }}"
-    state: started         # Port should be open
-    delay: 0               # No wait before first check (sec)
-    timeout: 3             # Stop checking after timeout (sec)
-  ignore_errors: yes
-  with_items:
-    - 3306
-    - 5000
