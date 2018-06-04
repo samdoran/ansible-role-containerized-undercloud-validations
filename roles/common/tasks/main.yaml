@@ -63,7 +63,6 @@
   - memcached
   - haproxy
   - keepalived
-
 - name: check appropriate ports are listening
   wait_for:
     host: localhost
