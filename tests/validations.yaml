@@ -1,5 +1,0 @@
-- hosts: localhost
-  become: no
-  connection: local
-  roles:
-     - ../ansible-role-containerized-undercloud-validations
