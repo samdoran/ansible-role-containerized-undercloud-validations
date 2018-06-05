@@ -9,7 +9,8 @@
 - name: check appropriate ports are listening
   wait_for:
     host: 0.0.0.0
-    port: "{{ item }}"
+    port: "{{ item.port | default(item) }}"
+    search_regex: "{{ item.search_regex | default(omit) }}"
     state: started         # Port should be open
     delay: 0               # No wait before first check (sec)
     timeout: 3             # Stop checking after timeout (sec)
