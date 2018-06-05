@@ -58,10 +58,17 @@ EXAMPLES = """
     container_filter:
       - status=exited
       - status=dead
+
+- name: Remove containers that matched filters
+  docker_container:
+    name: "{{ item }}"
+    state: absent
+  loop: "{{ docker.containers_filtered | map(attribute='id') | list }}"
+
 """
 
 RETURN = """
-docker_facts:
+docker:
   description: >
     Lists of container, volume, and image UUIDs,
     both filtered and unfiltered.
@@ -69,13 +76,15 @@ docker_facts:
   type: complex
   contains:
     containers:
-        description: List of container UUIDs
+        description: List of dictionaries of container name, state, and ID
         returned: always
-        type: list
+        type: complex
     containers_filtered:
-        description: List of UUIDs that matched the filter(s)
+        description: >
+            List of dictionaries of container name, state, and ID
+            that matched the filter(s)
         returned: always
-        type: list
+        type: complex
     images:
         description: List of image UUIDs
         returned: always
@@ -101,8 +110,7 @@ from ansible.module_utils.basic import AnsibleModule
 DOCKER_SUBCOMMAND_LOOKUP = [
     ('images', 'images', '-q'),
     ('volumes', 'volume ls', '-q'),
-    ('containers', 'ps -a', '--format "{{.Names}}##{{.ID}}##{{.Status}}"')
-    # ('containers', 'ps -a', '-q')
+    ('containers', 'ps -a', '--format {{.Names}}##{{.ID}}##{{.Status}}')
 ]
 
 
@@ -169,16 +177,22 @@ def main():
 
         docker_facts[item[0]] = []
 
+        # Run each Docker command
         for item in DOCKER_SUBCOMMAND_LOOKUP:
             rc, out, err = run_docker_command(
-                module, docker_bin, sub_command=item[1], opts=item[2])
+                module,
+                docker_bin,
+                sub_command=item[1],
+                opts=item[2])
 
+            # For everything but containers, return just the UIDs
             if item[0] != 'containers':
                 docker_facts[item[0]] = out
             elif item[0] == 'containers':
 
+                # For containers, use a custom format to get name, id,
+                # and status
                 for line in out:
-                    line = line.strip('"')
                     container_name, container_id, container_status = \
                         line.split('##')
                     container_status = container_status.split()[0]
@@ -188,13 +202,28 @@ def main():
                         'status': container_status
                     })
 
+            # Get filtered facts
             rc, out, err = run_docker_command(
                 module,
                 docker_bin,
                 sub_command=item[1],
+                opts=item[2],
                 filters=module.params[item[0].rstrip('s') + '_filter']
             )
-            docker_facts[item[0] + '_filtered'] = out
+
+            if item[0] != 'containers':
+                docker_facts[item[0] + '_filtered'] = out
+            elif item[0] == 'containers':
+
+                for line in out:
+                    container_name, container_id, container_status = \
+                        line.split('##')
+                    container_status = container_status.split()[0]
+                    docker_facts[item[0] + '_filtered'].append({
+                        'name': container_name,
+                        'id': container_id,
+                        'status': container_status
+                    })
 
     results = dict(
         ansible_facts=dict(
